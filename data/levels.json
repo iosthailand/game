@@ -1,0 +1,34 @@
+{
+    "levels": [
+        {
+            "id": 1,
+            "title": "Green Fields",
+            "map_file": "map.txt",
+            "enemies": [
+                "Slime"
+            ],
+            "encounter_rate": 0.01
+        },
+        {
+            "id": 2,
+            "title": "Spooky Forest",
+            "map_file": "map.txt",
+            "enemies": [
+                "Slime",
+                "Ghost"
+            ],
+            "encounter_rate": 0.02
+        },
+        {
+            "id": 3,
+            "title": "Chaos Zone",
+            "map_file": "map.txt",
+            "enemies": [
+                "Slime",
+                "Ghost",
+                "FastEnemy"
+            ],
+            "encounter_rate": 0.03
+        }
+    ]
+}
