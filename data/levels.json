@@ -3,6 +3,7 @@
         {
             "id": 1,
             "title": "Green Fields",
+            "time_limit": 60,
             "map_file": "maps/map01.txt",
             "enemies": [
                 {
@@ -19,6 +20,7 @@
         {
             "id": 2,
             "title": "Large Forest",
+            "time_limit": 90,
             "map_file": "maps/map02.txt",
             "enemies": [
                 {
@@ -35,6 +37,7 @@
         {
             "id": 3,
             "title": "Red Sea",
+            "time_limit": 120,
             "map_file": "maps/map03.txt",
             "enemies": [
                 {
@@ -51,6 +54,7 @@
         {
             "id": 4,
             "title": "Chaos Zone",
+            "time_limit": 150,
             "map_file": "maps/map04.txt",
             "enemies": [
                 {

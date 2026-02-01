@@ -21,6 +21,11 @@ class WorldScene(BaseScene):
         self.transitioning = False
         self.load_level_config()
         self.load_world()
+        
+        # Timer Setup
+        self.time_limit = self.level_config.get('time_limit', 60) # Default 60s
+        self.current_time = self.time_limit
+        self.hud_font = pygame.font.SysFont("Arial", 24, bold=True)
 
     def load_level_config(self):
         import json
@@ -57,6 +62,16 @@ class WorldScene(BaseScene):
         self.all_sprites.update()
         self.camera.update(self.game.player)
         
+        # Timer Logic
+        if not self.transitioning and self.current_time > 0:
+            self.current_time -= dt
+            if self.current_time <= 0:
+                self.current_time = 0
+                print("Time up! Game Over.")
+                from .game_over_scene import GameOverScene
+                self.manager.change(GameOverScene(self.manager))
+                return
+
         # Encounter cooldown
         if self.encounter_timer > 0:
             self.encounter_timer -= dt * 1000
@@ -108,3 +123,16 @@ class WorldScene(BaseScene):
         screen.fill(BLACK)
         for sprite in self.all_sprites:
             screen.blit(sprite.image, self.camera.apply(sprite))
+            
+        # HUD
+        # Time
+        time_color = WHITE
+        if self.current_time < 10:
+            time_color = RED
+            
+        time_text = self.hud_font.render(f"Time: {int(self.current_time)}", True, time_color)
+        screen.blit(time_text, (20, 20))
+        
+        # Enemies
+        enemy_text = self.hud_font.render(f"Enemies: {len(self.enemies)}", True, WHITE)
+        screen.blit(enemy_text, (WIDTH - enemy_text.get_width() - 20, 20))
