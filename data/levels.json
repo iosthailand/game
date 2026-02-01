@@ -3,32 +3,78 @@
         {
             "id": 1,
             "title": "Green Fields",
-            "map_file": "map.txt",
+            "map_file": "maps/map01.txt",
             "enemies": [
-                "Slime"
+                {
+                    "type": "Wizard",
+                    "percentage": 10
+                },
+                {
+                    "type": "Slime",
+                    "percentage": 90
+                }
             ],
             "encounter_rate": 0.01
         },
         {
             "id": 2,
-            "title": "Spooky Forest",
-            "map_file": "map.txt",
+            "title": "Large Forest",
+            "map_file": "maps/map02.txt",
             "enemies": [
-                "Slime",
-                "Ghost"
+                {
+                    "type": "Slime",
+                    "percentage": 70
+                },
+                {
+                    "type": "Ghost",
+                    "percentage": 30
+                }
             ],
-            "encounter_rate": 0.02
+            "encounter_rate": 0.01
         },
         {
             "id": 3,
-            "title": "Chaos Zone",
-            "map_file": "map.txt",
+            "title": "Red Sea",
+            "map_file": "maps/map03.txt",
             "enemies": [
-                "Slime",
-                "Ghost",
-                "FastEnemy"
+                {
+                    "type": "Slime",
+                    "percentage": 40
+                },
+                {
+                    "type": "Ghost",
+                    "percentage": 60
+                }
             ],
-            "encounter_rate": 0.03
+            "encounter_rate": 0.01
+        },
+        {
+            "id": 4,
+            "title": "Chaos Zone",
+            "map_file": "maps/map04.txt",
+            "enemies": [
+                {
+                    "type": "Slime",
+                    "percentage": 25
+                },
+                {
+                    "type": "Ghost",
+                    "percentage": 20
+                },
+                {
+                    "type": "FastEnemy",
+                    "percentage": 20
+                },
+                {
+                    "type": "GoblinArcher",
+                    "percentage": 20
+                },
+                {
+                    "type": "Wizard",
+                    "percentage": 15
+                }
+            ],
+            "encounter_rate": 0.002
         }
     ]
 }

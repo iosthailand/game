@@ -2,10 +2,14 @@ import pygame
 
 # Game Configuration
 TITLE = "Pygame RPG Professional"
+# Display settings
 WIDTH = 800
 HEIGHT = 600
 FPS = 60
 BGCOLOR = (30, 30, 30)
+# Use SCALED for automatic resizing and keeping aspect ratio
+# Use RESIZABLE to allow window resizing
+FLAGS = pygame.SCALED | pygame.RESIZABLE 
 
 # Tile settings
 TILESIZE = 32

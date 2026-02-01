@@ -16,6 +16,7 @@ class WorldScene(BaseScene):
         self.walls = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
+        self.enemy_bullets = pygame.sprite.Group() # New group for hostile projectiles
         self.encounter_timer = 1500 # 1.5s grace period when level starts
         self.transitioning = False
         self.load_level_config()
@@ -61,13 +62,15 @@ class WorldScene(BaseScene):
             self.encounter_timer -= dt * 1000
             return
 
-        # Check for collision with enemies (Immediate Game Over)
+        # Check for collision with enemies or enemy bullets (Immediate Game Over)
         hits = pygame.sprite.spritecollide(self.game.player, self.enemies, False)
-        if hits:
+        bullet_hits = pygame.sprite.spritecollide(self.game.player, self.enemy_bullets, True)
+        
+        if hits or bullet_hits:
             from .game_over_scene import GameOverScene
             print("Collision detected! Game Over triggered.")
             self.manager.change(GameOverScene(self.manager))
-            return # IMPORTANT: Stop processing this scene for this frame
+            return 
             
         # Bullet - Enemy collision
         hits = pygame.sprite.groupcollide(self.enemies, self.bullets, True, True)
@@ -76,23 +79,30 @@ class WorldScene(BaseScene):
             
         # Check for victory / level completion
         if len(self.enemies) == 0 and not self.transitioning:
-            import json
-            config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'levels.json')
-            with open(config_path, 'r') as f:
-                data = json.load(f)
-                levels = data['levels']
-                next_level = next((l for l in levels if l['id'] == self.level_id + 1), None)
-                
-            self.transitioning = True
-            if next_level:
-                print(f"Level {self.level_id} cleared! Loading Level {next_level['id']}...")
-                from .loading_scene import LoadingScene
-                self.manager.change(LoadingScene(self.manager, next_level['id']))
-                return
-            else:
-                from .victory_scene import VictoryScene
-                self.manager.change(VictoryScene(self.manager))
-                return
+            # Initialize transition timer if not set
+            if not hasattr(self, 'transition_delay'):
+                self.transition_delay = 1000 # 1 second delay
+            
+            self.transition_delay -= dt * 1000
+            
+            if self.transition_delay <= 0:
+                import json
+                config_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'levels.json')
+                with open(config_path, 'r') as f:
+                    data = json.load(f)
+                    levels = data['levels']
+                    next_level = next((l for l in levels if l['id'] == self.level_id + 1), None)
+                    
+                self.transitioning = True
+                if next_level:
+                    print(f"Level {self.level_id} cleared! Loading Level {next_level['id']}...")
+                    from .loading_scene import LoadingScene
+                    self.manager.change(LoadingScene(self.manager, next_level['id']))
+                    return
+                else:
+                    from .victory_scene import VictoryScene
+                    self.manager.change(VictoryScene(self.manager))
+                    return
 
     def draw(self, screen):
         screen.fill(BLACK)

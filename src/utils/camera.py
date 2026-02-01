@@ -17,9 +17,17 @@ class Camera:
         x = -target.rect.x + int(WIDTH / 2)
         y = -target.rect.y + int(HEIGHT / 2)
 
-        # limit scrolling to map size
-        x = min(0, x)  # left
-        y = min(0, y)  # top
-        x = max(-(self.width - WIDTH), x)  # right
-        y = max(-(self.height - HEIGHT), y)  # bottom
+        # limit scrolling to map size or center if smaller than screen
+        if self.width < WIDTH:
+            x = (WIDTH - self.width) // 2
+        else:
+            x = min(0, x)  # left
+            x = max(-(self.width - WIDTH), x)  # right
+
+        if self.height < HEIGHT:
+            y = (HEIGHT - self.height) // 2
+        else:
+            y = min(0, y)  # top
+            y = max(-(self.height - HEIGHT), y)  # bottom
+
         self.camera = pygame.Rect(x, y, self.width, self.height)

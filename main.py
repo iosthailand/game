@@ -8,7 +8,8 @@ from src.scenes.loading_scene import LoadingScene
 class Game:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        # Initialize screen with virtual resolution and scaling flags
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), FLAGS)
         pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         self.dt = 0
@@ -20,7 +21,6 @@ class Game:
         self.scene_manager = SceneManager(self)
         
         # Initial Scene
-        self.current_scene = None
         self.scene_manager.change(LoadingScene(self.scene_manager, 1))
 
     def run(self):
@@ -36,6 +36,9 @@ class Game:
         for event in events:
             if event.type == pygame.QUIT:
                 self.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F11:
+                    pygame.display.toggle_fullscreen()
         self.scene_manager.handle_events(events)
 
     def update(self):
