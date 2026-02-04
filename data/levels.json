@@ -14,8 +14,8 @@
                         "density": 0.01
                     },
                     {
-                        "type": "rock",
-                        "asset": "rock_decoration.png",
+                        "type": "mushroom",
+                        "asset": "mushroom_decoration.png",
                         "density": 0.01
                     }
                 ]
@@ -48,7 +48,12 @@
                     {
                         "type": "rock",
                         "asset": "rock_decoration.png",
-                        "density": 0.01
+                        "density": 0.005
+                    },
+                    {
+                        "type": "mushroom",
+                        "asset": "mushroom_decoration.png",
+                        "density": 0.005
                     }
                 ],
                 "static_objects": [
@@ -87,6 +92,17 @@
                         "type": "rock",
                         "asset": "rock_decoration.png",
                         "density": 0.01
+                    }
+                ],
+                "static_objects": [
+                    {
+                        "asset": "pink_tree.png",
+                        "pos": [
+                            105,
+                            200
+                        ],
+                        "unit": "pixel",
+                        "anchor": "center"
                     }
                 ]
             },

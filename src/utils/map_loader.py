@@ -18,8 +18,8 @@ class Tile(pygame.sprite.Sprite):
         self.groups = scene.all_sprites, scene.walls
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.game = scene.game
-        self.image = pygame.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.image = self.game.resource_manager.load_image('wall_tile', 'wall_tile.png')
+        self.image = pygame.transform.scale(self.image, (TILESIZE, TILESIZE))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
