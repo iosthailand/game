@@ -17,10 +17,16 @@ class WorldScene(BaseScene):
         self.enemies = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
         self.enemy_bullets = pygame.sprite.Group() # New group for hostile projectiles
+        self.decorations = pygame.sprite.Group()
         self.encounter_timer = 1500 # 1.5s grace period when level starts
         self.transitioning = False
         self.load_level_config()
         self.load_world()
+        
+        # Background Setup
+        bg_config = self.level_config.get('background', {})
+        self.bg_tile_name = bg_config.get('tile', 'grass_tile.png')
+        self.bg_tile = self.game.resource_manager.load_image(self.bg_tile_name, self.bg_tile_name)
         
         # Timer Setup
         self.time_limit = self.level_config.get('time_limit', 60) # Default 60s
@@ -120,9 +126,27 @@ class WorldScene(BaseScene):
                     return
 
     def draw(self, screen):
+        # Clear screen first to prevent artifacts
         screen.fill(BLACK)
-        for sprite in self.all_sprites:
+        
+        # Draw tiled background in screen space
+        tile_w, tile_h = self.bg_tile.get_size()
+        offset_x = self.camera.camera.x % tile_w
+        offset_y = self.camera.camera.y % tile_h
+        
+        # Loop over screen area plus margin to ensure full coverage
+        for y in range(int(offset_y) - tile_h, HEIGHT + tile_h, tile_h):
+            for x in range(int(offset_x) - tile_w, WIDTH + tile_w, tile_w):
+                screen.blit(self.bg_tile, (x, y))
+
+        # Draw decorations
+        for sprite in self.decorations:
             screen.blit(sprite.image, self.camera.apply(sprite))
+
+        # Draw all other sprites
+        for sprite in self.all_sprites:
+            if sprite not in self.decorations:
+                screen.blit(sprite.image, self.camera.apply(sprite))
             
         # HUD
         # Time

@@ -5,9 +5,10 @@ from .base_entity import BaseEntity
 from .bullet import EnemyBullet, WizardBullet
 
 class Enemy(BaseEntity):
-    def __init__(self, scene, x, y):
+    def __init__(self, scene, x, y, sprite_sheet=None, scale=1.0):
         super().__init__(scene, x, y, scene.all_sprites)
-        self.image = pygame.Surface((TILESIZE, TILESIZE))
+        self.scale = scale
+        self.image = pygame.Surface((int(TILESIZE * self.scale), int(TILESIZE * self.scale)))
         self.image.fill(RED)
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -15,6 +16,7 @@ class Enemy(BaseEntity):
         self.timer = 0
         self.change_dir_time = random.randint(1000, 3000)
         self.speed = PLAYER_SPEED / 2
+        self.sprite_sheet_name = sprite_sheet
         
         # Animation state
         self.current_frame = 0
@@ -62,39 +64,41 @@ class Enemy(BaseEntity):
              pass
 
 class Slime(Enemy):
-    def __init__(self, scene, x, y):
-        super().__init__(scene, x, y)
+    def __init__(self, scene, x, y, sprite_sheet='enemy_slime.png', scale=1.0):
+        super().__init__(scene, x, y, sprite_sheet, scale)
         self.speed = PLAYER_SPEED / 4
         self.hp = 1
         self.load_animations()
 
     def load_animations(self):
-        sheet = self.game.resource_manager.load_image('slime', 'enemy_slime.png')
+        sheet = self.game.resource_manager.load_image(self.sprite_sheet_name, self.sprite_sheet_name)
         self.animations = {'run': [], 'idle': []}
         for i in range(4):
             rect = pygame.Rect(i * 256, 0, 256, 256)
             frame = pygame.Surface((256, 256), pygame.SRCALPHA)
             frame.blit(sheet, (0, 0), rect)
-            scaled_frame = pygame.transform.scale(frame, (TILESIZE, TILESIZE))
+            target_size = (int(TILESIZE * self.scale), int(TILESIZE * self.scale))
+            scaled_frame = pygame.transform.scale(frame, target_size)
             self.animations['run'].append(scaled_frame)
         self.animations['idle'] = self.animations['run']
         self.image = self.animations['idle'][0]
 
 class Ghost(Enemy):
-    def __init__(self, scene, x, y):
-        super().__init__(scene, x, y)
+    def __init__(self, scene, x, y, sprite_sheet='enemy_ghost.png', scale=1.0):
+        super().__init__(scene, x, y, sprite_sheet, scale)
         self.speed = PLAYER_SPEED / 2
         self.load_animations()
         
     def load_animations(self):
-        sheet = self.game.resource_manager.load_image('ghost', 'enemy_ghost.png')
+        sheet = self.game.resource_manager.load_image(self.sprite_sheet_name, self.sprite_sheet_name)
         self.animations = {'run': [], 'idle': []}
         for i in range(4):
             rect = pygame.Rect(i * 256, 0, 256, 256)
             frame = pygame.Surface((256, 256), pygame.SRCALPHA)
             frame.blit(sheet, (0, 0), rect)
+            target_size = (int(TILESIZE * self.scale), int(TILESIZE * self.scale))
             # Use original size for better spooky look or scale down
-            scaled_frame = pygame.transform.scale(frame, (TILESIZE, TILESIZE))
+            scaled_frame = pygame.transform.scale(frame, target_size)
             self.animations['run'].append(scaled_frame)
         self.animations['idle'] = self.animations['run']
         self.image = self.animations['idle'][0]
@@ -129,8 +133,8 @@ class Ghost(Enemy):
             self.rect.y = self.y
             self.change_direction()
 class GoblinArcher(Enemy):
-    def __init__(self, scene, x, y):
-        super().__init__(scene, x, y)
+    def __init__(self, scene, x, y, sprite_sheet='enemy_slime.png', scale=1.0):
+        super().__init__(scene, x, y, sprite_sheet, scale)
         self.speed = PLAYER_SPEED / 6
         self.detect_range = 350
         self.fire_rate = 2000
@@ -138,8 +142,8 @@ class GoblinArcher(Enemy):
         self.load_animations()
         
     def load_animations(self):
-        # Use slime sheet as base for goblin archer (green tinted)
-        sheet = self.game.resource_manager.load_image('slime', 'enemy_slime.png')
+        # Use sprite sheet from config (defaulting to slime)
+        sheet = self.game.resource_manager.load_image(self.sprite_sheet_name, self.sprite_sheet_name)
         self.animations = {'run': [], 'idle': []}
         for i in range(4):
             rect = pygame.Rect(i * 256, 0, 256, 256)
@@ -147,7 +151,14 @@ class GoblinArcher(Enemy):
             frame.blit(sheet, (0, 0), rect)
             # Tint green for goblin feel
             frame.fill((100, 255, 100, 255), special_flags=pygame.BLEND_RGBA_MULT)
-            scaled_frame = pygame.transform.scale(frame, (TILESIZE, TILESIZE))
+            target_size = (int(TILESIZE * self.scale), int(TILESIZE * self.scale))
+            scaled_frame = pygame.transform.scale(frame, target_size)
+            
+            # Indicator
+            pos = (target_size[0] - 10, 10)
+            pygame.draw.circle(scaled_frame, (255, 0, 0), pos, 5)
+            pygame.draw.circle(scaled_frame, (255, 255, 255), pos, 6, 1)
+
             self.animations['run'].append(scaled_frame)
         self.animations['idle'] = [self.animations['run'][0]]
         self.image = self.animations['idle'][0]
@@ -202,29 +213,28 @@ class GoblinArcher(Enemy):
             EnemyBullet(self.scene, self.rect.centerx, self.rect.centery, dir_vec)
 
 class FastEnemy(Enemy):
-    def __init__(self, scene, x, y):
-        super().__init__(scene, x, y)
+    def __init__(self, scene, x, y, sprite_sheet='enemy_slime.png', scale=1.0):
+        super().__init__(scene, x, y, sprite_sheet, scale)
         self.speed = PLAYER_SPEED * 0.8
         self.change_dir_time = random.randint(500, 1500)
         self.load_animations()
 
     def load_animations(self):
-        # Fallback to red-tinted slime for FastEnemy due to image generation limits
-        sheet = self.game.resource_manager.load_image('slime', 'enemy_slime.png').copy()
-        sheet.fill((255, 120, 120), special_flags=pygame.BLEND_RGB_MULT)
+        sheet = self.game.resource_manager.load_image(self.sprite_sheet_name, self.sprite_sheet_name)
         
         self.animations = {'run': [], 'idle': []}
         for i in range(4):
             rect = pygame.Rect(i * 256, 0, 256, 256)
             frame = pygame.Surface((256, 256), pygame.SRCALPHA)
             frame.blit(sheet, (0, 0), rect)
-            scaled_frame = pygame.transform.scale(frame, (TILESIZE, TILESIZE))
+            target_size = (int(TILESIZE * self.scale), int(TILESIZE * self.scale))
+            scaled_frame = pygame.transform.scale(frame, target_size)
             self.animations['run'].append(scaled_frame)
         self.animations['idle'] = self.animations['run']
         self.image = self.animations['idle'][0]
 class Wizard(Enemy):
-    def __init__(self, scene, x, y):
-        super().__init__(scene, x, y)
+    def __init__(self, scene, x, y, sprite_sheet='enemy_slime.png', scale=1.0):
+        super().__init__(scene, x, y, sprite_sheet, scale)
         self.speed = PLAYER_SPEED / 8
         self.detect_range = 500
         self.fire_rate = 3000
@@ -232,16 +242,20 @@ class Wizard(Enemy):
         self.load_animations()
         
     def load_animations(self):
-        # Purple/blue tinted slime for wizard
-        sheet = self.game.resource_manager.load_image('slime', 'enemy_slime.png')
+        sheet = self.game.resource_manager.load_image(self.sprite_sheet_name, self.sprite_sheet_name)
         self.animations = {'run': [], 'idle': []}
         for i in range(4):
             rect = pygame.Rect(i * 256, 0, 256, 256)
             frame = pygame.Surface((256, 256), pygame.SRCALPHA)
             frame.blit(sheet, (0, 0), rect)
-            # Purple tint for wizard
-            frame.fill((180, 100, 255, 255), special_flags=pygame.BLEND_RGBA_MULT)
-            scaled_frame = pygame.transform.scale(frame, (TILESIZE, TILESIZE))
+            target_size = (int(TILESIZE * self.scale), int(TILESIZE * self.scale))
+            scaled_frame = pygame.transform.scale(frame, target_size)
+            
+            # Indicator
+            pos = (target_size[0] - 10, 10)
+            pygame.draw.circle(scaled_frame, (255, 0, 0), pos, 5)
+            pygame.draw.circle(scaled_frame, (255, 255, 255), pos, 6, 1)
+
             self.animations['run'].append(scaled_frame)
         self.animations['idle'] = [self.animations['run'][0]]
         self.image = self.animations['idle'][0]

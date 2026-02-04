@@ -5,14 +5,29 @@
             "title": "Green Fields",
             "time_limit": 60,
             "map_file": "maps/map01.txt",
+            "background": {
+                "tile": "grass_tile.png",
+                "decorations": [
+                    {
+                        "type": "flower",
+                        "asset": "flower_decoration.png",
+                        "density": 0.01
+                    },
+                    {
+                        "type": "rock",
+                        "asset": "rock_decoration.png",
+                        "density": 0.01
+                    }
+                ]
+            },
             "enemies": [
                 {
                     "type": "Wizard",
-                    "percentage": 10
+                    "percentage": 50
                 },
                 {
-                    "type": "Slime",
-                    "percentage": 90
+                    "type": "GoblinArcher",
+                    "percentage": 50
                 }
             ],
             "encounter_rate": 0.01
@@ -22,6 +37,21 @@
             "title": "Large Forest",
             "time_limit": 90,
             "map_file": "maps/map02.txt",
+            "background": {
+                "tile": "grass_tile.png",
+                "decorations": [
+                    {
+                        "type": "flower",
+                        "asset": "flower_decoration.png",
+                        "density": 0.01
+                    },
+                    {
+                        "type": "rock",
+                        "asset": "rock_decoration.png",
+                        "density": 0.01
+                    }
+                ]
+            },
             "enemies": [
                 {
                     "type": "Slime",
@@ -39,6 +69,16 @@
             "title": "Red Sea",
             "time_limit": 120,
             "map_file": "maps/map03.txt",
+            "background": {
+                "tile": "dirt_tile.png",
+                "decorations": [
+                    {
+                        "type": "rock",
+                        "asset": "rock_decoration.png",
+                        "density": 0.01
+                    }
+                ]
+            },
             "enemies": [
                 {
                     "type": "Slime",
@@ -56,6 +96,21 @@
             "title": "Chaos Zone",
             "time_limit": 150,
             "map_file": "maps/map04.txt",
+            "background": {
+                "tile": "dirt_tile.png",
+                "decorations": [
+                    {
+                        "type": "flower",
+                        "asset": "flower_decoration.png",
+                        "density": 0.01
+                    },
+                    {
+                        "type": "rock",
+                        "asset": "rock_decoration.png",
+                        "density": 0.01
+                    }
+                ]
+            },
             "enemies": [
                 {
                     "type": "Slime",

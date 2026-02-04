@@ -1,0 +1,22 @@
+{
+    "Slime": {
+        "sprite_sheet": "enemy_slime.png",
+        "scale": 2.0
+    },
+    "Ghost": {
+        "sprite_sheet": "enemy_ghost.png",
+        "scale": 2.0
+    },
+    "GoblinArcher": {
+        "sprite_sheet": "enemy_goblin_archer.png",
+        "scale": 2.0
+    },
+    "FastEnemy": {
+        "sprite_sheet": "enemy_fast.png",
+        "scale": 2.0
+    },
+    "Wizard": {
+        "sprite_sheet": "enemy_wizard.png",
+        "scale": 1.0
+    }
+}
