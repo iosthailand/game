@@ -22,12 +22,12 @@
             },
             "enemies": [
                 {
-                    "type": "Wizard",
-                    "percentage": 50
+                    "type": "Slime",
+                    "percentage": 90
                 },
                 {
                     "type": "GoblinArcher",
-                    "percentage": 50
+                    "percentage": 10
                 }
             ],
             "encounter_rate": 0.01
@@ -49,6 +49,17 @@
                         "type": "rock",
                         "asset": "rock_decoration.png",
                         "density": 0.01
+                    }
+                ],
+                "static_objects": [
+                    {
+                        "asset": "big_tree.png",
+                        "pos": [
+                            55,
+                            75
+                        ],
+                        "unit": "pixel",
+                        "anchor": "center"
                     }
                 ]
             },
@@ -134,6 +145,49 @@
                 }
             ],
             "encounter_rate": 0.002
+        },
+        {
+            "id": 5,
+            "title": "The Garden",
+            "time_limit": 60,
+            "map_file": "maps/map05.txt",
+            "background": {
+                "tile": "grass_tile.png",
+                "decorations": [
+                    {
+                        "type": "flower",
+                        "asset": "flower_decoration.png",
+                        "density": 0.02
+                    }
+                ],
+                "static_objects": [
+                    {
+                        "asset": "big_rock.png",
+                        "pos": [
+                            15,
+                            7
+                        ],
+                        "unit": "pixel",
+                        "anchor": "center"
+                    },
+                    {
+                        "asset": "rock_decoration.png",
+                        "pos": [
+                            15,
+                            8
+                        ],
+                        "unit": "tile",
+                        "anchor": "center"
+                    }
+                ]
+            },
+            "enemies": [
+                {
+                    "type": "Slime",
+                    "percentage": 100
+                }
+            ],
+            "encounter_rate": 0.005
         }
     ]
 }

@@ -86,6 +86,7 @@ class Player(BaseEntity):
 
     def shoot(self):
         from .bullet import Bullet
+        self.game.resource_manager.play_sound('shoot')
         Bullet(self.scene, self.rect.centerx, self.rect.centery, self.last_dir)
 
     def update(self):

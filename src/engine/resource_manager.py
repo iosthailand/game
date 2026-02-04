@@ -13,7 +13,8 @@ class ResourceManager:
         if name not in self.images:
             try:
                 self.images[name] = pygame.image.load(full_path).convert_alpha()
-            except pygame.error:
+            except Exception as e:
+                print(f"Warning: Could not load image {path}. Error: {e}")
                 # Create a placeholder if file not found
                 surf = pygame.Surface((32, 32))
                 surf.fill((255, 0, 255)) # Magenta placeholder
@@ -28,6 +29,24 @@ class ResourceManager:
         if key not in self.fonts:
             self.fonts[key] = pygame.font.SysFont(name, size)
         return self.fonts[key]
+
+    def load_sound(self, name, path, volume=1.0):
+        full_path = os.path.join(self.base_path, 'assets', 'audio', path)
+        if name not in self.sounds:
+            try:
+                sound = pygame.mixer.Sound(full_path)
+                sound.set_volume(volume)
+                self.sounds[name] = sound
+            except Exception as e:
+                print(f"Warning: Could not load sound {path}. Error: {e}")
+                return None
+        return self.sounds[name]
+
+    def play_sound(self, name):
+        if name in self.sounds:
+            self.sounds[name].play()
+        else:
+            print(f"Warning: Sound {name} not found in cache")
 
     def get_spritesheet_frames(self, name, frame_width, frame_height):
         sheet = self.get_image(name)

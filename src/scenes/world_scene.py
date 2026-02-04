@@ -32,6 +32,10 @@ class WorldScene(BaseScene):
         self.time_limit = self.level_config.get('time_limit', 60) # Default 60s
         self.current_time = self.time_limit
         self.hud_font = pygame.font.SysFont("Arial", 24, bold=True)
+        
+        # Audio Initialization
+        self.game.resource_manager.load_sound('shoot', 'shoot.wav', volume=0.1)
+        self.game.resource_manager.load_sound('hit', 'hit.wav', volume=0.4)
 
     def load_level_config(self):
         import json
@@ -96,6 +100,7 @@ class WorldScene(BaseScene):
         # Bullet - Enemy collision
         hits = pygame.sprite.groupcollide(self.enemies, self.bullets, True, True)
         if hits:
+            self.game.resource_manager.play_sound('hit')
             print("Enemy defeated!")
             
         # Check for victory / level completion

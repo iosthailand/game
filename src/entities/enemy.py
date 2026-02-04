@@ -210,6 +210,7 @@ class GoblinArcher(Enemy):
         dir_vec = pygame.math.Vector2(player.rect.center) - pygame.math.Vector2(self.rect.center)
         if dir_vec.length() > 0:
             dir_vec = dir_vec.normalize()
+            self.game.resource_manager.play_sound('shoot')
             EnemyBullet(self.scene, self.rect.centerx, self.rect.centery, dir_vec)
 
 class FastEnemy(Enemy):
@@ -307,4 +308,5 @@ class Wizard(Enemy):
         dir_vec = pygame.math.Vector2(player.rect.center) - pygame.math.Vector2(self.rect.center)
         if dir_vec.length() > 0:
             dir_vec = dir_vec.normalize()
+            self.game.resource_manager.play_sound('shoot')
             WizardBullet(self.scene, self.rect.centerx, self.rect.centery, dir_vec)

@@ -11,6 +11,9 @@ class BattleScene(BaseScene):
         # Load enemy health if available, else default
         self.enemy_hp = enemy.health if hasattr(enemy, 'health') else 50
         print(f"Entering Battle with {enemy.__class__.__name__}")
+        
+        # Audio Initialization
+        self.game.resource_manager.load_sound('hit', 'hit.wav', volume=0.4)
 
     def handle_events(self, events):
         for event in events:
@@ -26,6 +29,7 @@ class BattleScene(BaseScene):
     def player_attack(self):
         damage = 10
         self.enemy_hp -= damage
+        self.game.resource_manager.play_sound('hit')
         print(f"Attacked Enemy! HP left: {self.enemy_hp}")
         
         if self.enemy_hp <= 0:

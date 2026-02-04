@@ -105,12 +105,28 @@ class SpawnManager:
         bg_config = level_config.get('background', {})
         decos = bg_config.get('decorations', [])
         
+        # 1. Spawn Random Decorations (Tile-based)
         for row, tiles in enumerate(map_data):
             for col, tile in enumerate(tiles):
-                # Only spawn on floor tiles
                 if tile == '.':
                     for deco in decos:
                         if random.random() < deco.get('density', 0):
-                            d = Decoration(scene, col * TILESIZE, row * TILESIZE, deco['asset'], (scene.all_sprites, scene.decorations))
-                            # We don't add to enemies or walls
-                            break # One deco per tile max
+                            d = Decoration(scene, col * TILESIZE, row * TILESIZE, 
+                                          deco['asset'], 
+                                          (scene.all_sprites, scene.decorations))
+                            break
+                            
+        # 2. Spawn Static Objects (Precise placement)
+        static_objs = bg_config.get('static_objects', [])
+        for obj in static_objs:
+            asset = obj.get('asset')
+            pos = obj.get('pos', [0, 0])
+            unit = obj.get('unit', 'tile') # 'tile' or 'pixel'
+            anchor = obj.get('anchor', 'topleft')
+            
+            if unit == 'tile':
+                x, y = pos[0] * TILESIZE, pos[1] * TILESIZE
+            else:
+                x, y = pos[0], pos[1]
+                
+            Decoration(scene, x, y, asset, (scene.all_sprites, scene.decorations), anchor=anchor)
